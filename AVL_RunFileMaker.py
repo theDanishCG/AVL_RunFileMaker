@@ -23,15 +23,21 @@ M = []
 alpha = []
 Beta = []
 
+inpComplete = "Input cases read successfully"
+
 with open(inFile, 'r') as iF:
+    print("Opening input file and reading variables")
     for i, line in enumerate(iF):
         if i == 0:
             templine = line.split()
             for j, k in enumerate(templine):
                 varNames.append(templine[j])
         else:
+            print("Reading inputs for case " + str(i) + " of " + str(len(varNames)))
             templine = line.split(',')
             alt.append(templine[0])
             M.append(templine[1])
             alpha.append(templine[2])
             Beta.append(templine[3].removesuffix('\n'))
+
+print(inpComplete)
