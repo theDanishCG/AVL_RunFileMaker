@@ -16,7 +16,7 @@ from pathlib import Path
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 inFile = "input.csv"
-templateFile = "template.run"
+templateFile = Path(str(dir_path) + "/data/template.run")
 outFile = "cases.run"
 
 varNames = []
