@@ -12,11 +12,13 @@ Created: 09/26/2024
 """
 
 import os
+import numpy as np
 from pathlib import Path
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 inFile = "input.csv"
 templateFile = Path(str(dir_path) + "/data/template.run")
+atmosFile = templateFile = Path(str(dir_path) + "/data/stdatmos.csv")
 outFile = "cases.run"
 
 varNames = []
@@ -25,8 +27,34 @@ M = []
 alpha = []
 Beta = []
 tempLines = []
+altList = []
+tempList = []
+pList = []
+rhoList = []
+aList = []
+muList = []
 
 inpComplete = "Input cases read successfully"
+
+with open(atmosFile, 'r') as aF:
+    for i, line in enumerate(aF):
+        if i > 2:
+            templine = line.split(',')
+            altList.append(templine[0])
+            tempList.append(templine[1])
+            pList.append(templine[2])
+            rhoList.append(templine[3])
+            aList.append(templine[4])
+            muList.append(templine[5])
+
+altArray = np.array(altList)
+tempArray = np.array(tempList)
+pArray = np.array(pList)
+rhoArray = np.array(rhoList)
+aArray = np.array(aList)
+muArray = np.array(muList)
+
+del altList, tempList, pList, rhoList, aList, muList
 
 with open(inFile, 'r') as iF:
     print("Opening input file and reading variables")
@@ -55,3 +83,5 @@ print('Template format loaded')
     #for i in len(alt):
         #for i, line in enumerate(tempLines):
         # Modify each
+
+#def getAtmos(alt):
