@@ -16,6 +16,8 @@ from pathlib import Path
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 inFile = "input.csv"
+templateFile = "template.run"
+outFile = "cases.run"
 
 varNames = []
 alt = []
@@ -41,3 +43,5 @@ with open(inFile, 'r') as iF:
             Beta.append(templine[3].removesuffix('\n'))
 
 print(inpComplete)
+
+

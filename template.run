@@ -1,0 +1,43 @@
+ ---------------------------------------------
+ Run case  1:   Alpha 0.0, Mach 0.60.0, SL
+ 
+ alpha        ->  alpha       =   0.0    
+ beta         ->  beta        =   0.00000
+ pb/2V        ->  pb/2V       =   0.00000
+ qc/2V        ->  qc/2V       =   0.00000
+ rb/2V        ->  rb/2V       =   0.00000
+ flap         ->  flap        =   0.00000
+ aileron      ->  aileron     =   0.00000
+
+ 
+ alpha     =   0.00000     deg
+ beta      =   0.00000     deg
+ pb/2V     =   0.00000        
+ qc/2V     =   0.00000        
+ rb/2V     =   0.00000        
+ CL        =   0.00000        
+ CDo       =   0.00000        
+ bank      =   0.00000     deg
+ elevation =   0.00000     deg
+ heading   =   0.00000     deg
+ Mach      =   0.60000        
+ velocity  =   0.00000     ft/s
+ density   =   0.00000000  slugs/ft^3
+ grav.acc. =   32.18       ft/s^2
+ turn_rad. =   0.00000     ft
+ load_fac. =   1.00000       
+ X_cg      =   0.00000     ft
+ Y_cg      =   0.00000     ft
+ Z_cg      =   0.00000     ft
+ mass      =   0.00000     slugs
+ Ixx       =   0.00000     slugs-ft^2
+ Iyy       =   0.00000     slugs-ft^2
+ Izz       =   0.00000     slugs-ft^2
+ Ixy       =   0.00000     slugs-ft^2
+ Iyz       =   0.00000     slugs-ft^2
+ Izx       =   0.00000     slugs-ft^2
+ visc CL_a =   0.00000        
+ visc CL_u =   0.00000        
+ visc CM_a =   0.00000        
+ visc CM_u =   0.00000        
+ 
