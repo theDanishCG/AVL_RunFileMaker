@@ -24,6 +24,7 @@ alt = []
 M = []
 alpha = []
 Beta = []
+tempLines = []
 
 inpComplete = "Input cases read successfully"
 
@@ -44,4 +45,13 @@ with open(inFile, 'r') as iF:
 
 print(inpComplete)
 
+print("Formatting output run file")
 
+with open(templateFile, 'r') as tF:
+    for line in tF:
+        tempLines.append(line)
+print('Template format loaded')
+#with open(outFile, 'w') as oF:
+    #for i in len(alt):
+        #for i, line in enumerate(tempLines):
+        # Modify each
