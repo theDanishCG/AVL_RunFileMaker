@@ -84,4 +84,19 @@ print('Template format loaded')
         #for i, line in enumerate(tempLines):
         # Modify each
 
-#def getAtmos(alt):
+def getAtmos(alt):
+
+"""
+This function interpolates standard atmospheric conditions
+for the given altitude
+"""
+
+retCond = []
+
+retCond.append(interp(alt,altArray,tempArray))
+retCond.append(interp(alt,altArray,pArray))
+retCond.append(interp(alt,altArray,rhoArray))
+retCond.append(interp(alt,altArray,aArray))
+retCond.append(interp(alt,altArray,muArray))
+
+return retCond
