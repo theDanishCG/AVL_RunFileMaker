@@ -97,19 +97,19 @@ print(inpBegin)
 with open(inFile, 'r') as iF:
     for i, line in enumerate(iF):
         if i == 0:
-            templine = line.split()
+            templine = line.removesuffix('/n').split(',')
             for j, k in enumerate(templine):
                 varNames.append(templine[j])
         else:
             print("Reading inputs for case " + str(i) + " of " +
                 str(len(varNames)))
-            templine = line.split(',')
+            templine = line.removesuffix('\n').split(',')
             alt.append(templine[0])
             M.append(templine[1])
             alpha.append(templine[2])
             Beta.append(templine[3])
             flap.append(templine[4])
-            ail.append(templine[5].removesuffix('\n'))
+            ail.append(templine[5])
 
 print(inpComplete)
 
