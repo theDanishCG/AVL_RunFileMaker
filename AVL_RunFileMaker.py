@@ -22,7 +22,7 @@ from pathlib import Path
 dir_path = os.path.dirname(os.path.realpath(__file__))
 inFile = "input.csv"
 templateFile = Path(str(dir_path) + "/data/template.run")
-atmosFile = templateFile = Path(str(dir_path) + "/data/stdatmos.csv")
+atmosFile = Path(str(dir_path) + "/data/stdatmos.csv")
 outFile = "cases.run"
 
 # initialize lists
@@ -116,10 +116,33 @@ print(tempRead)
 with open(templateFile, 'r') as tF:
     for line in tF:
         tempLines.append(line)
-        caseAtmos = getAtmos(alt[0])
-print('Template format loaded')
-#with open(outFile, 'w') as oF:
-    #for i in len(alt):
-        #for i, line in enumerate(tempLines):
-        # Modify each
 
+print('Template format loaded')
+
+with open(outFile, 'w') as oF:
+    for i, caseAlt in enumerate(alt):
+        print("Writing outputs for case " + str(i+1) + " of " +
+            str(len(varNames)))
+        for j, line in enumerate(tempLines):
+            #print(line)
+            if j == 1:
+                line = line.replace('1', str(i+1)).replace('0.0',
+                    str(alpha[i])).replace('0.60', str(M[i]))
+                oF.write(line)
+            elif j == 3:
+                line = line.replace('0.0', str(alpha[i]))
+                oF.write(line)
+            elif j == 4:
+                line = line.replace('0.00000', str(Beta[0]))
+                oF.write(line)
+            elif j == 8:
+                line = line.replace('0.00000', str(flap[0]))
+                oF.write(line)
+            elif j == 9:
+                line = line.replace('0.00000', str(ail[0]))
+                oF.write(line)
+            else:
+                oF.write(line)
+
+
+print('Done')
