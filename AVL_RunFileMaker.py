@@ -131,7 +131,6 @@ with open(outFile, 'w') as oF:
                 line = line.replace('1', str(i+1)).replace('0.0',
                     str(alpha[i])).replace('0.60', str(M[i])).replace('SL',
                     str(int(alt[i])/1000) + " kft")
-                    
                 oF.write(line)
             elif j == 3:
                 line = line.replace('0.0', str(alpha[i]))

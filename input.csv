@@ -1,2 +1,2 @@
-altitude,mach,alpha,beta
-0,0.6,2,0
+altitude,mach,alpha,beta,flap,aileron
+0,0.6,2,0,0,0
