@@ -107,7 +107,9 @@ with open(inFile, 'r') as iF:
             alt.append(templine[0])
             M.append(templine[1])
             alpha.append(templine[2])
-            Beta.append(templine[3].removesuffix('\n'))
+            Beta.append(templine[3])
+            flap.append(templine[4])
+            ail.append(templine[5].removesuffix('\n'))
 
 print(inpComplete)
 
@@ -125,6 +127,7 @@ with open(outFile, 'w') as oF:
     for i, caseAlt in enumerate(alt):
         print("Writing outputs for case " + str(i+1) + " of " +
             str(len(varNames)))
+        caseAtmos = getAtmos(alt[i])
         for j, line in enumerate(tempLines):
             #print(line)
             if j == 1:
