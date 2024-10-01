@@ -32,6 +32,8 @@ alt = []
 M = []
 alpha = []
 Beta = []
+flap = []
+ail = []
 tempLines = []
 altList = []
 tempList = []
@@ -127,19 +129,21 @@ with open(outFile, 'w') as oF:
             #print(line)
             if j == 1:
                 line = line.replace('1', str(i+1)).replace('0.0',
-                    str(alpha[i])).replace('0.60', str(M[i]))
+                    str(alpha[i])).replace('0.60', str(M[i])).replace('SL',
+                    str(int(alt[i])/1000) + " kft")
+                    
                 oF.write(line)
             elif j == 3:
                 line = line.replace('0.0', str(alpha[i]))
                 oF.write(line)
             elif j == 4:
-                line = line.replace('0.00000', str(Beta[0]))
+                line = line.replace('0.00000', str(Beta[i]))
                 oF.write(line)
             elif j == 8:
-                line = line.replace('0.00000', str(flap[0]))
+                line = line.replace('0.00000', str(flap[i]))
                 oF.write(line)
             elif j == 9:
-                line = line.replace('0.00000', str(ail[0]))
+                line = line.replace('0.00000', str(ail[i]))
                 oF.write(line)
             else:
                 oF.write(line)
