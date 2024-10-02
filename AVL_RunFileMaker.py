@@ -101,8 +101,7 @@ with open(inFile, 'r') as iF:
             for j, k in enumerate(templine):
                 varNames.append(templine[j])
         else:
-            print("Reading inputs for case " + str(i) + " of " +
-                str(len(varNames)))
+            print("Reading inputs for case " + str(i))
             templine = line.removesuffix('\n').split(',')
             alt.append(templine[0])
             M.append(templine[1])
@@ -125,8 +124,7 @@ print('Template format loaded')
 
 with open(outFile, 'w') as oF:
     for i, caseAlt in enumerate(alt):
-        print("Writing outputs for case " + str(i+1) + " of " +
-            str(len(varNames)))
+        print("Writing outputs for case " + str(i+1))
         caseAtmos = getAtmos(alt[i])
         for j, line in enumerate(tempLines):
             #print(line)
