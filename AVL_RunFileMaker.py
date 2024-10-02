@@ -32,8 +32,8 @@ alt = []
 M = []
 alpha = []
 Beta = []
-flap = []
-ail = []
+cSurfs = []
+dSurfs = []
 tempLines = []
 altList = []
 tempList = []
@@ -99,7 +99,12 @@ with open(inFile, 'r') as iF:
         if i == 0:
             templine = line.removesuffix('/n').split(',')
             for j, k in enumerate(templine):
-                varNames.append(templine[j])
+            # Should iterate through control surfaces and store names in a list
+	            if j >= 4:
+		            for l in templine[4,:]:
+			            cSurfs.append(templine[l])
+		            else
+		                varNames.append(templine[j])
         else:
             print("Reading inputs for case " + str(i))
             templine = line.removesuffix('\n').split(',')
@@ -107,8 +112,8 @@ with open(inFile, 'r') as iF:
             M.append(templine[1])
             alpha.append(templine[2])
             Beta.append(templine[3])
-            flap.append(templine[4])
-            ail.append(templine[5])
+            for j in templine[4,:]:
+	            dSurfs.append(templine[j])
 
 print(inpComplete)
 
