@@ -100,11 +100,11 @@ with open(inFile, 'r') as iF:
             templine = line.removesuffix('/n').split(',')
             for j, k in enumerate(templine):
             # Should iterate through control surfaces and store names in a list
-	            if j >= 4:
-		            for l in templine[4,:]:
-			            cSurfs.append(templine[l])
-		            else
-		                varNames.append(templine[j])
+                if j >= 4:
+                    for l in templine[4:]:
+                        cSurfs.append(l)
+                else:
+                    varNames.append(templine[j])
         else:
             print("Reading inputs for case " + str(i))
             templine = line.removesuffix('\n').split(',')
@@ -112,8 +112,8 @@ with open(inFile, 'r') as iF:
             M.append(templine[1])
             alpha.append(templine[2])
             Beta.append(templine[3])
-            for j in templine[4,:]:
-	            dSurfs.append(templine[j])
+            for j in templine[4:]:
+	            dSurfs.append(j)
 
 print(inpComplete)
 
@@ -126,6 +126,8 @@ with open(templateFile, 'r') as tF:
         tempLines.append(line)
 
 print('Template format loaded')
+
+k = 0
 
 with open(outFile, 'w') as oF:
     for i, caseAlt in enumerate(alt):
@@ -144,12 +146,10 @@ with open(outFile, 'w') as oF:
             elif j == 4:
                 line = line.replace('0.00000', str(Beta[i]))
                 oF.write(line)
-            elif j == 8:
-                line = line.replace('0.00000', str(flap[i]))
+            elif j >= 8 and j < (8 + len(dSurfs)):
+                line = line.replace('0.00000', str(dSurfs[k]))
                 oF.write(line)
-            elif j == 9:
-                line = line.replace('0.00000', str(ail[i]))
-                oF.write(line)
+                k+=1
             else:
                 oF.write(line)
 
