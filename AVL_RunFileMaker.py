@@ -127,12 +127,11 @@ with open(templateFile, 'r') as tF:
 
 print('Template format loaded')
 
-k = 0
-
 with open(outFile, 'w') as oF:
     for i, caseAlt in enumerate(alt):
         print("Writing outputs for case " + str(i+1))
         caseAtmos = getAtmos(alt[i])
+        k = 0
         for j, line in enumerate(tempLines):
             #print(line)
             if j == 1:
