@@ -140,13 +140,13 @@ with open(outFile, 'w') as oF:
                     str(int(alt[i])/1000) + " kft")
                 oF.write(line)
             elif j == 3:
-                line = line.replace('0.0', str(alpha[i]))
+                line = line.replace('0.0', str("%.5f" % float(alpha[i])))
                 oF.write(line)
             elif j == 4:
-                line = line.replace('0.00000', str(Beta[i]))
+                line = line.replace('0.00000', str("%.5f" % float(Beta[i])))
                 oF.write(line)
             elif j >= 8 and j < (8 + len(dSurfs)):
-                line = line.replace('0.00000', str(dSurfs[k]))
+                line = line.replace('0.00000', str("%.5f" % float(dSurfs[k])))
                 oF.write(line)
                 k+=1
             else:
