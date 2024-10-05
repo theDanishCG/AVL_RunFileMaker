@@ -1,6 +1,6 @@
-# Project Title
+# AVL .run file maker
 
-Simple overview of use/purpose.
+This script will read an input file and output a .run file with all of the relevant parameters for use with the Athena Vortex Lattice (AVL) software.
 
 ## Description
 
@@ -10,8 +10,8 @@ An in-depth paragraph about your project and overview of use.
 
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+* Requires Python
+* Latest version can be found at: 
 
 ### Installing
 
@@ -35,18 +35,11 @@ command to run if program contains helper info
 
 ## Authors
 
-Contributors names and contact info
-
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+Dane Jackson
 
 ## Version History
 
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
-* 0.1
-    * Initial Release
+
 
 ## License
 
