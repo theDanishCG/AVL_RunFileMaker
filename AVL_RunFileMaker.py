@@ -48,6 +48,7 @@ caseatmos = []
 inpBegin = "Opening input file and reading variables"
 inpComplete = "Input cases read successfully"
 tempRead = "Reading template run file"
+outWrite = outFile + " has been written successfully."
 
 def getAtmos(alt):
 
@@ -145,12 +146,27 @@ with open(outFile, 'w') as oF:
             elif j == 4:
                 line = line.replace('0.00000', str("%.5f" % float(Beta[i])))
                 oF.write(line)
-            elif j >= 8 and j < (8 + len(dSurfs)):
+            elif j >= 8 and j < (8 + len(cSurfs)):
                 line = line.replace('0.00000', str("%.5f" % float(dSurfs[k])))
                 oF.write(line)
                 k+=1
+            elif line.startswith(" alpha"):
+                line = line.replace('0.00000', str("%.5f" % float(alpha[i])))
+                oF.write(line)
+            elif line.startswith(" beta"):
+                line = line.replace('0.00000', str("%.5f" % float(Beta[i])))
+                oF.write(line)
+            elif line.startswith(" Mach"):
+                line = line.replace('0.60000', str("%.5f" % float(M[i])))
+                oF.write(line)
+            elif line.startswith(" velocity"):
+                v = float(M[i])*aArray[i]
+                line = line.replace('0.00000', str("%.5f" % float(v)))
+                oF.write(line)
+            elif line.startswith(' visc CM_u'):
+                line = line + '\n'
+                oF.write(line)
             else:
                 oF.write(line)
 
-
-print('Done')
+print(outWrite)
