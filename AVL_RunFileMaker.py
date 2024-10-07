@@ -48,7 +48,7 @@ caseatmos = []
 inpBegin = "Opening input file and reading variables"
 inpComplete = "Input cases read successfully"
 tempRead = "Reading template run file"
-outWrite = outFile + " has been written successfully."
+outWrite = "Run file " + outFile + " has been written successfully."
 
 def getAtmos(alt):
 
@@ -67,6 +67,13 @@ def getAtmos(alt):
 
     return retCond # Returns list of floats containing standard atmospheric
                    # conditions at provided altitude
+
+def repVal(line, val):
+    if line.startswith(' density'):
+        newLine = line.replace('0.00000000', str("%.8f" % float(val)))
+    else:
+        newLine = line.replace('0.00000', str("%.5f" % float(val)))
+    return newLine
 
 # Reads standard atmospheric data for interpolation
 
@@ -144,25 +151,21 @@ with open(outFile, 'w') as oF:
                 line = line.replace('0.0', str("%.5f" % float(alpha[i])))
                 oF.write(line)
             elif j == 4:
-                line = line.replace('0.00000', str("%.5f" % float(Beta[i])))
-                oF.write(line)
+                oF.write(repVal(line, Beta[i]))
             elif j >= 8 and j < (8 + len(cSurfs)):
-                line = line.replace('0.00000', str("%.5f" % float(dSurfs[k])))
-                oF.write(line)
+                oF.write(repVal(line, dSurfs[k]))
                 k+=1
             elif line.startswith(" alpha"):
-                line = line.replace('0.00000', str("%.5f" % float(alpha[i])))
-                oF.write(line)
+                oF.write(repVal(line, alpha[i]))
             elif line.startswith(" beta"):
-                line = line.replace('0.00000', str("%.5f" % float(Beta[i])))
-                oF.write(line)
+                oF.write(repVal(line, Beta[i]))
             elif line.startswith(" Mach"):
-                line = line.replace('0.60000', str("%.5f" % float(M[i])))
-                oF.write(line)
+                oF.write(repVal(line, M[i]))
             elif line.startswith(" velocity"):
                 v = float(M[i])*aArray[i]
-                line = line.replace('0.00000', str("%.5f" % float(v)))
-                oF.write(line)
+                oF.write(repVal(line, v))
+            elif line.startswith(' density'):
+                oF.write(repVal(line, caseAtmos[2]))
             elif line.startswith(' visc CM_u'):
                 line = line + '\n'
                 oF.write(line)
