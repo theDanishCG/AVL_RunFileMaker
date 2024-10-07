@@ -20,7 +20,7 @@ from pathlib import Path
 # define paths and files
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-inFile = "input.csv"
+inFile = Path(str(dir_path) + '/input.csv')
 templateFile = Path(str(dir_path) + "/data/template.run")
 atmosFile = Path(str(dir_path) + "/data/stdatmos.csv")
 outFile = "cases.run"
@@ -162,7 +162,7 @@ with open(outFile, 'w') as oF:
             elif line.startswith(" Mach"):
                 oF.write(repVal(line, M[i]))
             elif line.startswith(" velocity"):
-                v = float(M[i])*aArray[i]
+                v = float(M[i])*caseAtmos[3]
                 oF.write(repVal(line, v))
             elif line.startswith(' density'):
                 oF.write(repVal(line, caseAtmos[2]))
