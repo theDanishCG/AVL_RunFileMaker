@@ -1,7 +1,7 @@
 on: push
 jobs:
   pyinstaller-build:
-    runs-on: <windows-latest / ubuntu-latest / ..... etc>
+    runs-on: <windows-latest>
     steps:
       - name: PyInstaller Action
                 uses: Martin005/pyinstaller-action@v1.2.0
