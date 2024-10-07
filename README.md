@@ -10,28 +10,25 @@ An in-depth paragraph about your project and overview of use.
 
 ### Dependencies
 
-* Requires Python
-* Latest version can be found at: 
+* Only tested on Windows 11
 
 ### Installing
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+* Download all files and unzip _internal.zip
+* Open input.csv and define all parameters for flight conditions
+* Currently, the format for the first 4 values should not be changed.
+* Any control surface deflections after the first 4 values are general and can
+* be modified to fit any vehicle.
 
 ### Executing program
 
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
+* Once input.csv file has been configured simply run the AVL_RunFileMaker.exe
+* A file will have been created called cases.run that will have all of the
+* cases ready to load into AVL.
 
 ## Help
 
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
+Nothing yet.
 
 ## Authors
 
@@ -39,17 +36,13 @@ Dane Jackson
 
 ## Version History
 
+v1.0.0
 
+Initial Release
 
 ## License
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+This project is licensed under the MIT License - see the LICENSE.md file for details
 
 ## Acknowledgments
 
-Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
