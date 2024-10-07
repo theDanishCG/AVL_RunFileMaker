@@ -1,0 +1,12 @@
+              
+jobs:
+  pyinstaller-build:
+    runs-on: <windows-latest / ubuntu-latest / ..... etc>
+    steps:
+      - name: PyInstaller Action
+                uses: Martin005/pyinstaller-action@v1.2.0
+        with:
+          python_ver: '3.12'
+          spec: 'AVL_RunFileMaker.py'
+          upload_exe_with_name: 'My executable'
+          options: --onefile, --name "My App",
