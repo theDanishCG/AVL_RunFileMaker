@@ -1,4 +1,4 @@
 cases.run
 /build
-/dist
 *.spec
+dist/AVL_RunFileMaker/_internal
