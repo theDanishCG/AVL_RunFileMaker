@@ -19,7 +19,7 @@ from pathlib import Path
 
 # Index of beginning of control surfaces
 
-csi = 8
+csi = 9
 
 # define paths and files
 
@@ -36,6 +36,7 @@ alt = []
 M = []
 alpha = []
 Beta = []
+C_D_0 = []
 X_cg = []
 I_xx = []
 I_yy = []
@@ -131,10 +132,11 @@ with open(inFile, 'r') as iF:
             M.append(templine[1])
             alpha.append(templine[2])
             Beta.append(templine[3])
-            X_cg.append(templine[4])
-            I_xx.append(templine[5])
-            I_yy.append(templine[6])
-            I_zz.append(templine[7])
+            C_D_0.append(templine[4])
+            X_cg.append(templine[5])
+            I_xx.append(templine[6])
+            I_yy.append(templine[7])
+            I_zz.append(templine[8])
             for j in templine[csi:]:
 	            dSurfs.append(j)
 
@@ -181,6 +183,8 @@ with open(outFile, 'w') as oF:
                 oF.write(repVal(line, v))
             elif line.startswith(' density'):
                 oF.write(repVal(line, caseAtmos[2]))
+            elif line.startswith(' CDo'):
+                oF.write(repVal(line, C_D_0[i]))
             elif line.startswith(' X_cg'):
                 oF.write(repVal(line, X_cg[i]))
             elif line.startswith(' Ixx'):

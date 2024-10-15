@@ -1,2 +1,2 @@
-altitude,mach,alpha,beta,X_cg,I_xx,I_yy,I_zz,flap,aileron,elevator,rudder
-5000,0.4,0,0,12,2772.32,5255.24,11907.41,0,0,0,0
+altitude,mach,alpha,beta,CDo,X_cg,I_xx,I_yy,I_zz,flap,aileron,elevator,rudder
+5000,0.4,0,0,0.02,12,2772.32,5255.24,11907.41,0,0,0,0
