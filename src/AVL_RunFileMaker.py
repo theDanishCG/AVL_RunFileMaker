@@ -17,13 +17,17 @@ import os
 import numpy as np
 from pathlib import Path
 
+# Index of beginning of control surfaces
+
+csi = 8
+
 # define paths and files
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 inFile = Path(str(dir_path) + '/input.csv')
 templateFile = Path(str(dir_path) + "/data/template.run")
 atmosFile = Path(str(dir_path) + "/data/stdatmos.csv")
-outFile = "cases.run"
+outFile = Path(str(dir_path) +"/cases.run")
 
 # initialize lists
 
@@ -32,6 +36,10 @@ alt = []
 M = []
 alpha = []
 Beta = []
+X_cg = []
+I_xx = []
+I_yy = []
+I_zz = []
 cSurfs = []
 dSurfs = []
 tempLines = []
@@ -48,7 +56,7 @@ caseatmos = []
 inpBegin = "Opening input file and reading variables"
 inpComplete = "Input cases read successfully"
 tempRead = "Reading template run file"
-outWrite = "Run file " + outFile + " has been written successfully."
+outWrite = "Run file " + str(outFile) + " has been written successfully."
 
 def getAtmos(alt):
 
@@ -71,6 +79,8 @@ def getAtmos(alt):
 def repVal(line, val):
     if line.startswith(' density'):
         newLine = line.replace('0.00000000', str("%.8f" % float(val)))
+    elif line.startswith(' I') or line.startswith(' vel'):
+        newLine = line.replace('0.00000', str("%.2f" % float(val)))
     else:
         newLine = line.replace('0.00000', str("%.5f" % float(val)))
     return newLine
@@ -105,12 +115,13 @@ print(inpBegin)
 with open(inFile, 'r') as iF:
     for i, line in enumerate(iF):
         if i == 0:
-            templine = line.removesuffix('/n').split(',')
+            templine = line.removesuffix('\n').split(',')
             for j, k in enumerate(templine):
             # Should iterate through control surfaces and store names in a list
-                if j >= 4:
-                    for l in templine[4:]:
-                        cSurfs.append(l)
+                if j >= csi:
+                    #for l in templine[csi:]:
+                    print(k)
+                    cSurfs.append(k)
                 else:
                     varNames.append(templine[j])
         else:
@@ -120,7 +131,11 @@ with open(inFile, 'r') as iF:
             M.append(templine[1])
             alpha.append(templine[2])
             Beta.append(templine[3])
-            for j in templine[4:]:
+            X_cg.append(templine[4])
+            I_xx.append(templine[5])
+            I_yy.append(templine[6])
+            I_zz.append(templine[7])
+            for j in templine[csi:]:
 	            dSurfs.append(j)
 
 print(inpComplete)
@@ -166,6 +181,14 @@ with open(outFile, 'w') as oF:
                 oF.write(repVal(line, v))
             elif line.startswith(' density'):
                 oF.write(repVal(line, caseAtmos[2]))
+            elif line.startswith(' X_cg'):
+                oF.write(repVal(line, X_cg[i]))
+            elif line.startswith(' Ixx'):
+                oF.write(repVal(line, I_xx[i]))
+            elif line.startswith(' Iyy'):
+                oF.write(repVal(line, I_yy[i]))
+            elif line.startswith(' Izz'):
+                oF.write(repVal(line, I_zz[i]))
             elif line.startswith(' visc CM_u'):
                 line = line + '\n'
                 oF.write(line)
