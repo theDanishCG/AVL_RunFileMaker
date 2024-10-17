@@ -24,10 +24,10 @@ csi = 9
 # define paths and files
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-inFile = Path(str(dir_path) + '/input.csv')
-templateFile = Path(str(dir_path) + "/data/template.run")
-atmosFile = Path(str(dir_path) + "/data/stdatmos.csv")
-outFile = Path(str(dir_path) +"/cases.run")
+input_file = Path(str(dir_path) + '/input.csv')
+template_file = Path(str(dir_path) + "/data/template.run")
+atmos_file = Path(str(dir_path) + "/data/stdatmos.csv")
+out_file = Path(str(dir_path) +"/cases.run")
 
 # initialize lists
 
@@ -88,7 +88,7 @@ def replace_value(line, val): #repVal
 
 # Reads standard atmospheric data for interpolation
 
-with open(atmosFile, 'r') as aF:
+with open(atmos_file, 'r') as aF:
     for i, line in enumerate(aF):
         if i > 2:
             templine = line.split(',')
@@ -113,7 +113,7 @@ del altList, tempList, pList, rhoList, aList, muList
 # Reads input file and creates lists of variables for all cases
 
 print(inpBegin)
-with open(inFile, 'r') as iF:
+with open(input_file, 'r') as iF:
     for i, line in enumerate(iF):
         if i == 0:
             templine = line.removesuffix('\n').split(',')
@@ -146,7 +146,7 @@ print(inpComplete)
 
 print(tempRead)
 
-with open(templateFile, 'r') as tF:
+with open(template_file, 'r') as tF:
     for line in tF:
         tempLines.append(line)
 
@@ -154,7 +154,7 @@ print('Template format loaded')
 
 rv = replace_value
 
-with open(outFile, 'w') as oF:
+with open(out_file, 'w') as oF:
     for i, caseAlt in enumerate(alt):
         print("Writing outputs for case " + str(i+1))
         caseAtmos = get_atmos(alt[i])
