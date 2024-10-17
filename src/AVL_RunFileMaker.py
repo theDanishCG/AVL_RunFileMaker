@@ -59,7 +59,7 @@ inpComplete = "Input cases read successfully"
 tempRead = "Reading template run file"
 outWrite = "Run file " + str(outFile) + " has been written successfully."
 
-def getAtmos(alt):
+def get_atmos(alt): # getAtmos
 
     """
     This function interpolates standard atmospheric conditions
@@ -77,7 +77,7 @@ def getAtmos(alt):
     return retCond # Returns list of floats containing standard atmospheric
                    # conditions at provided altitude
 
-def repVal(line, val):
+def replace_value(line, val): #repVal
     if line.startswith(' density'):
         newLine = line.replace('0.00000000', str("%.8f" % float(val)))
     elif line.startswith(' I') or line.startswith(' vel'):
@@ -152,10 +152,12 @@ with open(templateFile, 'r') as tF:
 
 print('Template format loaded')
 
+rv = replace_value
+
 with open(outFile, 'w') as oF:
     for i, caseAlt in enumerate(alt):
         print("Writing outputs for case " + str(i+1))
-        caseAtmos = getAtmos(alt[i])
+        caseAtmos = get_atmos(alt[i])
         k = 0
         for j, line in enumerate(tempLines):
             #print(line)
@@ -168,31 +170,31 @@ with open(outFile, 'w') as oF:
                 line = line.replace('0.0', str("%.5f" % float(alpha[i])))
                 oF.write(line)
             elif j == 4:
-                oF.write(repVal(line, Beta[i]))
+                oF.write(rv(line, Beta[i]))
             elif j >= 8 and j < (8 + len(cSurfs)):
-                oF.write(repVal(line, dSurfs[k]))
+                oF.write(rv(line, dSurfs[k]))
                 k+=1
             elif line.startswith(" alpha"):
-                oF.write(repVal(line, alpha[i]))
+                oF.write(rv(line, alpha[i]))
             elif line.startswith(" beta"):
-                oF.write(repVal(line, Beta[i]))
+                oF.write(rv(line, Beta[i]))
             elif line.startswith(" Mach"):
-                oF.write(repVal(line, M[i]))
+                oF.write(rv(line, M[i]))
             elif line.startswith(" velocity"):
                 v = float(M[i])*caseAtmos[3]
-                oF.write(repVal(line, v))
+                oF.write(rv(line, v))
             elif line.startswith(' density'):
-                oF.write(repVal(line, caseAtmos[2]))
+                oF.write(rv(line, caseAtmos[2]))
             elif line.startswith(' CDo'):
-                oF.write(repVal(line, C_D_0[i]))
+                oF.write(rv(line, C_D_0[i]))
             elif line.startswith(' X_cg'):
-                oF.write(repVal(line, X_cg[i]))
+                oF.write(rv(line, X_cg[i]))
             elif line.startswith(' Ixx'):
-                oF.write(repVal(line, I_xx[i]))
+                oF.write(rv(line, I_xx[i]))
             elif line.startswith(' Iyy'):
-                oF.write(repVal(line, I_yy[i]))
+                oF.write(rv(line, I_yy[i]))
             elif line.startswith(' Izz'):
-                oF.write(repVal(line, I_zz[i]))
+                oF.write(rv(line, I_zz[i]))
             elif line.startswith(' visc CM_u'):
                 line = line + '\n'
                 oF.write(line)
