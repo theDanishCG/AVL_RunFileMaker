@@ -31,11 +31,11 @@ out_file = Path(str(dir_path) +"/cases.run")
 
 # initialize lists
 
-varNames = []
+#varNames = []
 alt = []
 M = []
 alpha = []
-Beta = []
+beta = []
 C_D_0 = []
 X_cg = []
 I_xx = []
@@ -50,14 +50,14 @@ pList = []
 rhoList = []
 aList = []
 muList = []
-caseatmos = []
+case_atmos = []
 
 # Create output messages
 
-inpBegin = "Opening input file and reading variables"
-inpComplete = "Input cases read successfully"
-tempRead = "Reading template run file"
-outWrite = "Run file " + str(outFile) + " has been written successfully."
+input_begin = "Opening input file and reading variables"
+input_complete = "Input cases read successfully"
+template_read = "Reading template run file"
+out_write = "Run file " + str(outFile) + " has been written successfully."
 
 def get_atmos(alt): # getAtmos
 
@@ -79,12 +79,12 @@ def get_atmos(alt): # getAtmos
 
 def replace_value(line, val): #repVal
     if line.startswith(' density'):
-        newLine = line.replace('0.00000000', str("%.8f" % float(val)))
+        new_line = line.replace('0.00000000', str("%.8f" % float(val)))
     elif line.startswith(' I') or line.startswith(' vel'):
-        newLine = line.replace('0.00000', str("%.2f" % float(val)))
+        new_line = line.replace('0.00000', str("%.2f" % float(val)))
     else:
-        newLine = line.replace('0.00000', str("%.5f" % float(val)))
-    return newLine
+        new_line = line.replace('0.00000', str("%.5f" % float(val)))
+    return new_line
 
 # Reads standard atmospheric data for interpolation
 
@@ -112,7 +112,7 @@ del altList, tempList, pList, rhoList, aList, muList
 
 # Reads input file and creates lists of variables for all cases
 
-print(inpBegin)
+print(input_begin)
 with open(input_file, 'r') as iF:
     for i, line in enumerate(iF):
         if i == 0:
@@ -124,14 +124,14 @@ with open(input_file, 'r') as iF:
                     print(k)
                     cSurfs.append(k)
                 else:
-                    varNames.append(templine[j])
+                    continue; #varNames.append(templine[j])
         else:
             print("Reading inputs for case " + str(i))
             templine = line.removesuffix('\n').split(',')
             alt.append(templine[0])
             M.append(templine[1])
             alpha.append(templine[2])
-            Beta.append(templine[3])
+            beta.append(templine[3])
             C_D_0.append(templine[4])
             X_cg.append(templine[5])
             I_xx.append(templine[6])
@@ -140,11 +140,11 @@ with open(input_file, 'r') as iF:
             for j in templine[csi:]:
 	            dSurfs.append(j)
 
-print(inpComplete)
+print(input_complete)
 
 # Reads template run file to rebuild with case data
 
-print(tempRead)
+print(template_read)
 
 with open(template_file, 'r') as tF:
     for line in tF:
@@ -157,7 +157,7 @@ rv = replace_value
 with open(out_file, 'w') as oF:
     for i, caseAlt in enumerate(alt):
         print("Writing outputs for case " + str(i+1))
-        caseAtmos = get_atmos(alt[i])
+        case_atmos = get_atmos(alt[i])
         k = 0
         for j, line in enumerate(tempLines):
             #print(line)
@@ -170,21 +170,21 @@ with open(out_file, 'w') as oF:
                 line = line.replace('0.0', str("%.5f" % float(alpha[i])))
                 oF.write(line)
             elif j == 4:
-                oF.write(rv(line, Beta[i]))
+                oF.write(rv(line, beta[i]))
             elif j >= 8 and j < (8 + len(cSurfs)):
                 oF.write(rv(line, dSurfs[k]))
                 k+=1
             elif line.startswith(" alpha"):
                 oF.write(rv(line, alpha[i]))
             elif line.startswith(" beta"):
-                oF.write(rv(line, Beta[i]))
+                oF.write(rv(line, beta[i]))
             elif line.startswith(" Mach"):
                 oF.write(rv(line, M[i]))
             elif line.startswith(" velocity"):
-                v = float(M[i])*caseAtmos[3]
+                v = float(M[i])*case_atmos[3]
                 oF.write(rv(line, v))
             elif line.startswith(' density'):
-                oF.write(rv(line, caseAtmos[2]))
+                oF.write(rv(line, case_atmos[2]))
             elif line.startswith(' CDo'):
                 oF.write(rv(line, C_D_0[i]))
             elif line.startswith(' X_cg'):
@@ -201,4 +201,4 @@ with open(out_file, 'w') as oF:
             else:
                 oF.write(line)
 
-print(outWrite)
+print(out_write)
