@@ -44,12 +44,12 @@ I_zz = []
 control_surfaces = []
 surface_deflections = []
 template_lines = []
-altList = []
-tempList = []
-pList = []
-rhoList = []
-aList = []
-muList = []
+altitudes = []
+temperatures = []
+pressures = []
+densities = []
+speeds_of_sound = []
+viscosities = []
 case_atmos = []
 
 # Create output messages
@@ -66,15 +66,17 @@ def get_atmos(alt): # getAtmos
     for the given altitude
     """
 
-    retCond = []
+    condition = []
 
-    retCond.append(np.interp(alt,altArray,tempArray))
-    retCond.append(np.interp(alt,altArray,pArray))
-    retCond.append(np.interp(alt,altArray,rhoArray))
-    retCond.append(np.interp(alt,altArray,aArray))
-    retCond.append(np.interp(alt,altArray,muArray))
+    condition.append(np.interp(alt,altArray,tempArray))
+    condition.append(np.interp(alt,altArray,pArray))
+    condition.append(np.interp(alt,altArray,rhoArray))
+    condition.append(np.interp(alt,altArray,aArray))
+    condition.append(np.interp(alt,altArray,muArray))
+    
+    condition = tuple(condition)
 
-    return retCond # Returns list of floats containing standard atmospheric
+    return condition # Returns list of floats containing standard atmospheric
                    # conditions at provided altitude
 
 def replace_value(line, val): #repVal
@@ -92,23 +94,23 @@ with open(atmos_file, 'r') as aF:
     for i, line in enumerate(aF):
         if i > 2:
             templine = line.split(',')
-            altList.append(templine[0])
-            tempList.append(templine[1])
-            pList.append(templine[2])
-            rhoList.append(templine[3])
-            aList.append(templine[4])
-            muList.append(templine[5])
+            altitudes.append(templine[0])
+            temperatures.append(templine[1])
+            pressures.append(templine[2])
+            densities.append(templine[3])
+            speeds_of_sound.append(templine[4])
+            viscosities.append(templine[5])
 
 # Converts atmospheric data lists into arrays and deletes lists
 
-altArray = np.asarray(altList, dtype = np.float32)
-tempArray = np.asarray(tempList, dtype = np.float32)
-pArray = np.asarray(pList, dtype = np.float32)
-rhoArray = np.asarray(rhoList, dtype = np.float32)
-aArray = np.asarray(aList, dtype = np.float32)
-muArray = np.asarray(muList, dtype = np.float32)
+altArray = np.asarray(altitudes, dtype = np.float32)
+tempArray = np.asarray(temperatures, dtype = np.float32)
+pArray = np.asarray(pressures, dtype = np.float32)
+rhoArray = np.asarray(densities, dtype = np.float32)
+aArray = np.asarray(speeds_of_sound, dtype = np.float32)
+muArray = np.asarray(viscosities, dtype = np.float32)
 
-del altList, tempList, pList, rhoList, aList, muList
+del altitudes, temperatures, pressures, densities, speeds_of_sound, viscosities
 
 # Reads input file and creates lists of variables for all cases
 
