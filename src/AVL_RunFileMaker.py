@@ -41,9 +41,9 @@ X_cg = []
 I_xx = []
 I_yy = []
 I_zz = []
-cSurfs = []
-dSurfs = []
-tempLines = []
+control_surfaces = []
+surface_deflections = []
+template_lines = []
 altList = []
 tempList = []
 pList = []
@@ -122,7 +122,7 @@ with open(input_file, 'r') as iF:
                 if j >= csi:
                     #for l in templine[csi:]:
                     print(k)
-                    cSurfs.append(k)
+                    control_surfaces.append(k)
                 else:
                     continue; #varNames.append(templine[j])
         else:
@@ -138,7 +138,7 @@ with open(input_file, 'r') as iF:
             I_yy.append(templine[7])
             I_zz.append(templine[8])
             for j in templine[csi:]:
-	            dSurfs.append(j)
+	            surface_deflections.append(j)
 
 print(input_complete)
 
@@ -148,7 +148,9 @@ print(template_read)
 
 with open(template_file, 'r') as tF:
     for line in tF:
-        tempLines.append(line)
+        template_lines.append(line)
+        
+template_lines = tuple(template_lines)
 
 print('Template format loaded')
 
@@ -159,7 +161,7 @@ with open(out_file, 'w') as oF:
         print("Writing outputs for case " + str(i+1))
         case_atmos = get_atmos(alt[i])
         k = 0
-        for j, line in enumerate(tempLines):
+        for j, line in enumerate(template_lines):
             #print(line)
             if j == 1:
                 line = line.replace('1', str(i+1)).replace('0.0',
@@ -171,8 +173,8 @@ with open(out_file, 'w') as oF:
                 oF.write(line)
             elif j == 4:
                 oF.write(rv(line, beta[i]))
-            elif j >= 8 and j < (8 + len(cSurfs)):
-                oF.write(rv(line, dSurfs[k]))
+            elif j >= 8 and j < (8 + len(control_surfaces)):
+                oF.write(rv(line, surface_deflections[k]))
                 k+=1
             elif line.startswith(" alpha"):
                 oF.write(rv(line, alpha[i]))
