@@ -25,9 +25,9 @@ csi = 9
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 input_file = Path(str(dir_path) + '/input.csv')
-template_file = Path(str(dir_path) + "/data/template.run")
-atmos_file = Path(str(dir_path) + "/data/stdatmos.csv")
-out_file = Path(str(dir_path) +"/cases.run")
+template_file = Path(str(dir_path) + '/data/template.run')
+atmos_file = Path(str(dir_path) + '/data/stdatmos.csv')
+out_file = Path(str(dir_path) +'/cases.run')
 
 # initialize lists
 
@@ -54,10 +54,10 @@ case_atmos = []
 
 # Create output messages
 
-input_begin = "Opening input file and reading variables"
-input_complete = "Input cases read successfully"
-template_read = "Reading template run file"
-out_write = "Run file " + str(out_file) + " has been written successfully."
+input_begin = 'Opening input file and reading variables'
+input_complete = 'Input cases read successfully'
+template_read = 'Reading template run file'
+out_write = 'Run file ' + str(out_file) + ' has been written successfully.'
 
 def get_atmos(alt): # getAtmos
 
@@ -79,14 +79,21 @@ def get_atmos(alt): # getAtmos
     return condition # Returns list of floats containing standard atmospheric
                    # conditions at provided altitude
 
-def replace_value(line, val): #repVal
+def replace_value(line, val):
     if line.startswith(' density'):
-        new_line = line.replace('0.00000000', str("%.8f" % float(val)))
+        new_line = line.replace('0.00000000', str('%.8f' % float(val)))
     elif line.startswith(' I') or line.startswith(' vel'):
-        new_line = line.replace('0.00000', str("%.2f" % float(val)))
+        new_line = line.replace('0.00000', str('%.2f' % float(val)))
     else:
-        new_line = line.replace('0.00000', str("%.5f" % float(val)))
+        new_line = line.replace('0.00000', str('%.5f' % float(val)))
     return new_line
+
+def control_surface_output(i):
+    num_spaces = 13 - len(control_surfaces[i])
+    line = (' ' + control_surfaces[i] + num_spaces * ' ' + '->  ' +
+            control_surfaces[i] + (num_spaces-1) * ' ' + '=   0.00000\n')
+    line = rv(line, surface_deflections[k])
+    return line
 
 # Reads standard atmospheric data for interpolation
 
@@ -126,7 +133,7 @@ with open(input_file, 'r') as iF:
                 else:
                     continue
         else:
-            print("Reading inputs for case " + str(i))
+            print('Reading inputs for case ' + str(i))
             templine = line.removesuffix('\n').split(',')
             alt.append(templine[0])
             M.append(templine[1])
@@ -158,7 +165,7 @@ rv = replace_value
 
 with open(out_file, 'w') as oF:
     for i, caseAlt in enumerate(alt):
-        print("Writing outputs for case " + str(i+1))
+        print('Writing outputs for case ' + str(i+1))
         case_atmos = get_atmos(alt[i])
         k = 0
         for j, line in enumerate(template_lines):
@@ -166,23 +173,26 @@ with open(out_file, 'w') as oF:
             if j == 1:
                 line = line.replace('1', str(i+1)).replace('0.0',
                     str(alpha[i])).replace('0.60', str(M[i])).replace('SL',
-                    str(int(alt[i])/1000) + " kft")
+                    str(int(alt[i])/1000) + ' kft')
                 oF.write(line)
             elif j == 3:
-                line = line.replace('0.0', str("%.5f" % float(alpha[i])))
+                line = line.replace('0.0', str('%.5f' % float(alpha[i])))
                 oF.write(line)
             elif j == 4:
                 oF.write(rv(line, beta[i]))
             elif j >= 8 and j < (8 + len(control_surfaces)):
-                oF.write(rv(line, surface_deflections[k]))
+                oF.write(control_surface_output(k))
                 k+=1
-            elif line.startswith(" alpha"):
+            elif k == len(control_surfaces):
+                oF.write('\n\n')
+                k += 1
+            elif line.startswith(' alpha'):
                 oF.write(rv(line, alpha[i]))
-            elif line.startswith(" beta"):
+            elif line.startswith(' beta'):
                 oF.write(rv(line, beta[i]))
-            elif line.startswith(" Mach"):
+            elif line.startswith(' Mach'):
                 oF.write(rv(line, M[i]))
-            elif line.startswith(" velocity"):
+            elif line.startswith(' velocity'):
                 v = float(M[i])*case_atmos[3]
                 oF.write(rv(line, v))
             elif line.startswith(' density'):
