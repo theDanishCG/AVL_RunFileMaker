@@ -31,16 +31,8 @@ out_file = Path(str(dir_path) +'/cases.run')
 
 # initialize lists
 
-#varNames = []
-alt = []
-M = []
-alpha = []
-beta = []
-C_D_0 = []
-X_cg = []
-I_xx = []
-I_yy = []
-I_zz = []
+input_parameters = []
+ip = input_parameters
 control_surfaces = []
 surface_deflections = []
 template_lines = []
@@ -59,7 +51,43 @@ input_complete = 'Input cases read successfully'
 template_read = 'Reading template run file'
 out_write = 'Run file ' + str(out_file) + ' has been written successfully.'
 
-def get_atmos(alt): # getAtmos
+def get_input():
+    # Reads input file and creates lists of variables for all cases
+
+    print(input_begin)
+    first_line = []
+    with open(input_file, 'r') as iF:
+        for i, line in enumerate(iF):
+            templine = line.removesuffix('\n').split(',')
+            if i == 0:
+                for j, parameter in enumerate(templine):
+                    if j >= csi:
+                        first_line.append(parameter)
+                        control_surfaces.append(parameter)
+                    else:
+                        first_line.append(parameter)
+                        continue
+            elif i == 1:
+                for j, parameter in enumerate(templine):
+                    for k in first_line:
+                        if parameter != k:
+                            first_line[j] = parameter
+                        else:
+                            continue
+            else:
+                print('Reading inputs for case ' + str(i-1))
+                for j, parameter in enumerate(first_line):
+                    for k, val in enumerate(templine):
+                        if k == j:
+                            ip.append(parameter.split())
+                            ip[k].append(eval(val))
+                            continue
+                    for h in templine[csi:]:
+                        surface_deflections.append(h)
+
+    print(input_complete)
+
+def get_atmos(alt):
 
     """
     This function interpolates standard atmospheric conditions
@@ -117,37 +145,7 @@ densities = np.asarray(densities, dtype = np.float32)
 speeds_of_sound = np.asarray(speeds_of_sound, dtype = np.float32)
 viscosities = np.asarray(viscosities, dtype = np.float32)
 
-#del altitudes, temperatures, pressures, densities, speeds_of_sound, viscosities
-
-# Reads input file and creates lists of variables for all cases
-
-print(input_begin)
-with open(input_file, 'r') as iF:
-    for i, line in enumerate(iF):
-        if i == 0:
-            templine = line.removesuffix('\n').split(',')
-            for j, k in enumerate(templine):
-            # Should iterate through control surfaces and store names in a list
-                if j >= csi:
-                    control_surfaces.append(k)
-                else:
-                    continue
-        else:
-            print('Reading inputs for case ' + str(i))
-            templine = line.removesuffix('\n').split(',')
-            alt.append(templine[0])
-            M.append(templine[1])
-            alpha.append(templine[2])
-            beta.append(templine[3])
-            C_D_0.append(templine[4])
-            X_cg.append(templine[5])
-            I_xx.append(templine[6])
-            I_yy.append(templine[7])
-            I_zz.append(templine[8])
-            for j in templine[csi:]:
-	            surface_deflections.append(j)
-
-print(input_complete)
+get_input()
 
 # Reads template run file to rebuild with case data
 
@@ -164,22 +162,26 @@ print('Template format loaded')
 rv = replace_value
 
 with open(out_file, 'w') as oF:
-    for i, caseAlt in enumerate(alt):
-        print('Writing outputs for case ' + str(i+1))
-        case_atmos = get_atmos(alt[i])
+    for i, caseAlt in enumerate(ip[0]):
+        if i == 0:
+            continue
+        print('Writing outputs for case ' + str(i))
+        case_atmos = get_atmos(ip[0][i])
         k = 0
         for j, line in enumerate(template_lines):
             #print(line)
             if j == 1:
-                line = line.replace('1', str(i+1)).replace('0.0',
-                    str(alpha[i])).replace('0.60', str(M[i])).replace('SL',
-                    str(int(alt[i])/1000) + ' kft')
+                line = line.replace('1', str(i)).replace('0.0',
+                    str(ip[2][i])).replace('0.60', str(ip[1][i])).replace('SL',
+                    str(int(ip[0][i])/1000) + ' kft')
                 oF.write(line)
             elif j == 3:
-                line = line.replace('0.0', str('%.5f' % float(alpha[i])))
+                line = line.replace('->  alpha', '->  ' + ip[2][0] +
+                        ((len('alpha') - len(ip[2][0])) * ' '))
+                line = line.replace('0.0', str('%.5f' % float(ip[2][i])))
                 oF.write(line)
             elif j == 4:
-                oF.write(rv(line, beta[i]))
+                oF.write(rv(line, ip[3][i]))
             elif j >= 8 and j < (8 + len(control_surfaces)):
                 oF.write(control_surface_output(k))
                 k+=1
@@ -187,26 +189,26 @@ with open(out_file, 'w') as oF:
                 oF.write('\n\n')
                 k += 1
             elif line.startswith(' alpha'):
-                oF.write(rv(line, alpha[i]))
+                oF.write(rv(line, ip[2][i]))
             elif line.startswith(' beta'):
-                oF.write(rv(line, beta[i]))
+                oF.write(rv(line, ip[3][i]))
             elif line.startswith(' Mach'):
-                oF.write(rv(line, M[i]))
+                oF.write(rv(line, ip[1][i]))
             elif line.startswith(' velocity'):
-                v = float(M[i])*case_atmos[3]
+                v = float(ip[1][i])*case_atmos[3]
                 oF.write(rv(line, v))
             elif line.startswith(' density'):
                 oF.write(rv(line, case_atmos[2]))
             elif line.startswith(' CDo'):
-                oF.write(rv(line, C_D_0[i]))
+                oF.write(rv(line, ip[4][i]))
             elif line.startswith(' X_cg'):
-                oF.write(rv(line, X_cg[i]))
+                oF.write(rv(line, ip[5][i]))
             elif line.startswith(' Ixx'):
-                oF.write(rv(line, I_xx[i]))
+                oF.write(rv(line, ip[6][i]))
             elif line.startswith(' Iyy'):
-                oF.write(rv(line, I_yy[i]))
+                oF.write(rv(line, ip[7][i]))
             elif line.startswith(' Izz'):
-                oF.write(rv(line, I_zz[i]))
+                oF.write(rv(line, ip[8][i]))
             elif line.startswith(' visc CM_u'):
                 line = line + '\n'
                 oF.write(line)
