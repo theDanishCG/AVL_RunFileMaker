@@ -57,7 +57,7 @@ case_atmos = []
 input_begin = "Opening input file and reading variables"
 input_complete = "Input cases read successfully"
 template_read = "Reading template run file"
-out_write = "Run file " + str(outFile) + " has been written successfully."
+out_write = "Run file " + str(out_file) + " has been written successfully."
 
 def get_atmos(alt): # getAtmos
 
@@ -68,11 +68,11 @@ def get_atmos(alt): # getAtmos
 
     condition = []
 
-    condition.append(np.interp(alt,altArray,tempArray))
-    condition.append(np.interp(alt,altArray,pArray))
-    condition.append(np.interp(alt,altArray,rhoArray))
-    condition.append(np.interp(alt,altArray,aArray))
-    condition.append(np.interp(alt,altArray,muArray))
+    condition.append(np.interp(alt,altitudes,temperatures))
+    condition.append(np.interp(alt,altitudes,pressures))
+    condition.append(np.interp(alt,altitudes,densities))
+    condition.append(np.interp(alt,altitudes,speeds_of_sound))
+    condition.append(np.interp(alt,altitudes,viscosities))
     
     condition = tuple(condition)
 
@@ -103,14 +103,14 @@ with open(atmos_file, 'r') as aF:
 
 # Converts atmospheric data lists into arrays and deletes lists
 
-altArray = np.asarray(altitudes, dtype = np.float32)
-tempArray = np.asarray(temperatures, dtype = np.float32)
-pArray = np.asarray(pressures, dtype = np.float32)
-rhoArray = np.asarray(densities, dtype = np.float32)
-aArray = np.asarray(speeds_of_sound, dtype = np.float32)
-muArray = np.asarray(viscosities, dtype = np.float32)
+altitudes = np.asarray(altitudes, dtype = np.float32)
+temperatures = np.asarray(temperatures, dtype = np.float32)
+pressures = np.asarray(pressures, dtype = np.float32)
+densities = np.asarray(densities, dtype = np.float32)
+speeds_of_sound = np.asarray(speeds_of_sound, dtype = np.float32)
+viscosities = np.asarray(viscosities, dtype = np.float32)
 
-del altitudes, temperatures, pressures, densities, speeds_of_sound, viscosities
+#del altitudes, temperatures, pressures, densities, speeds_of_sound, viscosities
 
 # Reads input file and creates lists of variables for all cases
 
@@ -122,11 +122,9 @@ with open(input_file, 'r') as iF:
             for j, k in enumerate(templine):
             # Should iterate through control surfaces and store names in a list
                 if j >= csi:
-                    #for l in templine[csi:]:
-                    print(k)
                     control_surfaces.append(k)
                 else:
-                    continue; #varNames.append(templine[j])
+                    continue
         else:
             print("Reading inputs for case " + str(i))
             templine = line.removesuffix('\n').split(',')
