@@ -117,9 +117,14 @@ def replace_value(line, val):
     return new_line
 
 def control_surface_output(i):
+    if control_surfaces[i] == ip[i+csi][0]:
+        constraint = control_surfaces[i]
+    else:
+        constraint = ip[i+csi][0]
     num_spaces = 13 - len(control_surfaces[i])
+    num_spaces_constraint = 12 - len(constraint)
     line = (' ' + control_surfaces[i] + num_spaces * ' ' + '->  ' +
-            control_surfaces[i] + (num_spaces-1) * ' ' + '=   0.00000\n')
+            constraint + num_spaces_constraint * ' ' + '=   0.00000\n')
     line = rv(line, surface_deflections[k])
     return line
 
