@@ -21,7 +21,7 @@ from pathlib import Path
 
 csi = 9
 
-# define paths and files
+# Define paths and files
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 input_file = Path(str(dir_path) + '/input.csv')
@@ -29,7 +29,7 @@ template_file = Path(str(dir_path) + '/data/template.run')
 atmos_file = Path(str(dir_path) + '/data/stdatmos.csv')
 out_file = Path(str(dir_path) +'/cases.run')
 
-# initialize lists
+# Initialize lists
 
 input_parameters = []
 ip = input_parameters
@@ -58,9 +58,9 @@ def get_input():
     first_line = []
     with open(input_file, 'r') as iF:
         for i, line in enumerate(iF):
-            templine = line.removesuffix('\n').split(',')
+            temp_line = line.removesuffix('\n').split(',')
             if i == 0:
-                for j, parameter in enumerate(templine):
+                for j, parameter in enumerate(temp_line):
                     if j >= csi:
                         first_line.append(parameter)
                         control_surfaces.append(parameter)
@@ -68,7 +68,7 @@ def get_input():
                         first_line.append(parameter)
                         continue
             elif i == 1:
-                for j, parameter in enumerate(templine):
+                for j, parameter in enumerate(temp_line):
                     for k in first_line:
                         if parameter != k:
                             first_line[j] = parameter
@@ -77,12 +77,12 @@ def get_input():
             else:
                 print('Reading inputs for case ' + str(i-1))
                 for j, parameter in enumerate(first_line):
-                    for k, val in enumerate(templine):
+                    for k, val in enumerate(temp_line):
                         if k == j:
                             ip.append(parameter.split())
                             ip[k].append(eval(val))
                             continue
-                    for h in templine[csi:]:
+                    for h in temp_line[csi:]:
                         surface_deflections.append(h)
 
     print(input_complete)
@@ -104,8 +104,8 @@ def get_atmos(alt):
     
     condition = tuple(condition)
 
-    return condition # Returns list of floats containing standard atmospheric
-                   # conditions at provided altitude
+    return condition    # Returns list of floats containing standard atmospheric
+                        # conditions at provided altitude
 
 def replace_value(line, val):
     if line.startswith(' density'):
@@ -119,29 +119,34 @@ def replace_value(line, val):
 def control_surface_output(i):
     if control_surfaces[i] == ip[i+csi][0]:
         constraint = control_surfaces[i]
+
     else:
         constraint = ip[i+csi][0]
+
     num_spaces = 13 - len(control_surfaces[i])
     num_spaces_constraint = 12 - len(constraint)
+
     line = (' ' + control_surfaces[i] + num_spaces * ' ' + '->  ' +
             constraint + num_spaces_constraint * ' ' + '=   0.00000\n')
+    
     line = rv(line, surface_deflections[k])
+
     return line
 
-# Reads standard atmospheric data for interpolation
+# Read standard atmospheric data for interpolation
 
 with open(atmos_file, 'r') as aF:
     for i, line in enumerate(aF):
         if i > 2:
-            templine = line.split(',')
-            altitudes.append(templine[0])
-            temperatures.append(templine[1])
-            pressures.append(templine[2])
-            densities.append(templine[3])
-            speeds_of_sound.append(templine[4])
-            viscosities.append(templine[5])
+            temp_line = line.split(',')
+            altitudes.append(temp_line[0])
+            temperatures.append(temp_line[1])
+            pressures.append(temp_line[2])
+            densities.append(temp_line[3])
+            speeds_of_sound.append(temp_line[4])
+            viscosities.append(temp_line[5])
 
-# Converts atmospheric data lists into arrays and deletes lists
+# Convert atmospheric data lists into arrays and deletes lists
 
 altitudes = np.asarray(altitudes, dtype = np.float32)
 temperatures = np.asarray(temperatures, dtype = np.float32)
@@ -152,7 +157,7 @@ viscosities = np.asarray(viscosities, dtype = np.float32)
 
 get_input()
 
-# Reads template run file to rebuild with case data
+# Read template run file to rebuild with case data
 
 print(template_read)
 
@@ -160,39 +165,48 @@ with open(template_file, 'r') as tF:
     for line in tF:
         template_lines.append(line)
         
+# Convert to tuple to prevent accidental changes
+
 template_lines = tuple(template_lines)
 
 print('Template format loaded')
 
 rv = replace_value
 
+# Write output file
+
 with open(out_file, 'w') as oF:
+    # Begin loop for all cases
     for i, caseAlt in enumerate(ip[0]):
         if i == 0:
-            continue
+            continue    # Skip first iteration of input names
         print('Writing outputs for case ' + str(i))
+        # Get atmospheric data for current case
         case_atmos = get_atmos(ip[0][i])
-        k = 0
+        # Begin loop through template for each case
         for j, line in enumerate(template_lines):
-            #print(line)
+            # Replace case number and name with generic flight condition info
             if j == 1:
                 line = line.replace('1', str(i)).replace('0.0',
                     str(ip[2][i])).replace('0.60', str(ip[1][i])).replace('SL',
                     str(int(ip[0][i])/1000) + ' kft')
                 oF.write(line)
+            # Replace angle of attack with appropriate constraint and value
             elif j == 3:
                 line = line.replace('->  alpha', '->  ' + ip[2][0] +
                         ((len('alpha') - len(ip[2][0])) * ' '))
                 line = line.replace('0.0', str('%.5f' % float(ip[2][i])))
                 oF.write(line)
+            # Replace sideslip angle with appropriate constraint and value
             elif j == 4:
                 oF.write(rv(line, ip[3][i]))
-            elif j >= 8 and j < (8 + len(control_surfaces)):
-                oF.write(control_surface_output(k))
-                k+=1
-            elif k == len(control_surfaces):
-                oF.write('\n\n')
-                k += 1
+            elif j == 8:
+                k = 0
+                while k < len(control_surfaces):
+                    oF.write(control_surface_output(k))
+                    k+=1
+                if k == len(control_surfaces):
+                    oF.write('\n')
             elif line.startswith(' alpha'):
                 oF.write(rv(line, ip[2][i]))
             elif line.startswith(' beta'):

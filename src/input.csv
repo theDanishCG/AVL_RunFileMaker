@@ -1,3 +1,3 @@
 altitude,mach,alpha,beta,CDo,X_cg,I_xx,I_yy,I_zz,flap,slat,aileron,elevator,rudder
-altitude,mach,CL,beta,CDo,X_cg,I_xx,I_yy,I_zz,flap,slat,aileron,CM,rudder
+altitude,mach,CL,beta,CDo,X_cg,I_xx,I_yy,I_zz,flap,slat,aileron,Cm,rudder
 15000,0.72,0.7411,0,0.0,60,1963841,1256858,3268028,0,0,0,0,0
