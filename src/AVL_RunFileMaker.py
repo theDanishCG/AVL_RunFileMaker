@@ -51,8 +51,11 @@ input_complete = 'Input cases read successfully'
 template_read = 'Reading template run file'
 out_write = 'Run file ' + str(out_file) + ' has been written successfully.'
 
+
+# Functions
+
 def get_input():
-    # Reads input file and creates lists of variables for all cases
+    """Reads input file and creates lists of variables for all cases"""
 
     print(input_begin)
     first_line = []
@@ -87,11 +90,12 @@ def get_input():
 
     print(input_complete)
 
-def get_atmos(alt):
 
-    """
-    This function interpolates standard atmospheric conditions
-    for the given altitude
+def get_atmos(alt):
+    """Interpolates standard atmospheric conditions at provided altitude and
+    returns a tuple.
+    
+    Arg: altitude [ft]
     """
 
     condition = []
@@ -107,7 +111,14 @@ def get_atmos(alt):
     return condition    # Returns list of floats containing standard atmospheric
                         # conditions at provided altitude
 
+
 def replace_value(line, val):
+    """Returns correctly formatted line with correct decimal precision.
+
+    Args: line
+          value
+    """
+
     if line.startswith(' density'):
         new_line = line.replace('0.00000000', str('%.8f' % float(val)))
     elif line.startswith(' I') or line.startswith(' vel'):
@@ -115,8 +126,13 @@ def replace_value(line, val):
     else:
         new_line = line.replace('0.00000', str('%.5f' % float(val)))
     return new_line
+    
 
 def control_surface_output(i):
+    """Return correctly formatted line for control surface outputs.
+
+    Arg: index
+    """
     if control_surfaces[i] == ip[i+csi][0]:
         constraint = control_surfaces[i]
 
@@ -132,6 +148,7 @@ def control_surface_output(i):
     line = rv(line, surface_deflections[k])
 
     return line
+    
 
 # Read standard atmospheric data for interpolation
 
